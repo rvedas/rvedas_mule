@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:mulexml="http://www.mulesoft.org/schema/mule/xml" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd">
+    <vm:connector name="VM" validateConnections="true" doc:name="VM"/>
+    <flow name="orders_system_apiFlow">
+        <file:inbound-endpoint path="${orders_file_input}" pollingFrequency="10000" responseTimeout="10000" doc:name="File">
+            <file:filename-regex-filter pattern=".*.xml" caseSensitive="true"/>
+        </file:inbound-endpoint>
+        <logger message="Original File Name : #[message.inboundProperties.originalFilename]" level="INFO" doc:name="Logger"/>
+        <set-session-variable variableName="original_file_name" value="#[message.inboundProperties.originalFilename]" doc:name="Session Variable"/>
+        <splitter expression="#[xpath3('//order', payload, 'NODESET')]" doc:name="Splitter"/>
+        <vm:outbound-endpoint exchange-pattern="one-way" path="orders_system_api_vm" connector-ref="VM" doc:name="VM"/>
+    </flow>
+    <flow name="orders_system_apiFlow1">
+        <vm:inbound-endpoint exchange-pattern="one-way" path="orders_system_api_vm" connector-ref="VM" doc:name="VM"/>
+        <mulexml:dom-to-xml-transformer doc:name="DOM to XML"/>
+        <set-variable variableName="output_file_name" value="#[function:count]_#[function:uuid]_#[sessionVars.original_file_name]" doc:name="Variable"/>
+        <logger message="Output File Name : #[flowVars.output_file_name]" level="INFO" doc:name="Logger"/>
+        <file:outbound-endpoint path="${orders_file_output}" outputPattern="#[flowVars.output_file_name]" connector-ref="File" responseTimeout="10000" doc:name="File"/>
+    </flow>
+</mule>
