@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+    <sub-flow name="salesforce_subflow">
+        <logger level="INFO" doc:name="Logger"/>
+        <file:outbound-endpoint responseTimeout="10000" doc:name="File"/>
+    </sub-flow>
+    <sub-flow name="hybris_subflow">
+        <logger level="INFO" doc:name="Logger"/>
+        <file:outbound-endpoint responseTimeout="10000" doc:name="File"/>
+    </sub-flow>
+    <sub-flow name="callidus_subflow">
+        <logger message="Writing output to " level="INFO" doc:name="Logger"/>
+        <file:outbound-endpoint responseTimeout="10000" doc:name="File"/>
+    </sub-flow>
+    <flow name="orders_router_apiFlow">
+        <file:inbound-endpoint path="${source_input}" connector-ref="File" pollingFrequency="10000" responseTimeout="10000" doc:name="File">
+            <file:filename-regex-filter pattern=".*.xml" caseSensitive="true"/>
+        </file:inbound-endpoint>
+        <logger message="Input File Name : #[message.inboundProperties.originalFilename]" level="INFO" doc:name="Logger"/>
+        <scatter-gather doc:name="Scatter-Gather">
+            <flow-ref name="callidus_subflow" doc:name="callidus_subflow"/>
+            <flow-ref name="hybris_subflow" doc:name="Flow Reference"/>
+            <flow-ref name="salesforce_subflow" doc:name="Flow Reference"/>
+        </scatter-gather>
+    </flow>
+</mule>
