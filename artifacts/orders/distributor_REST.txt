@@ -1,0 +1,11 @@
+RAML
+
+Request:
+GET method
+/shaklee/distributor
+?id=101
+
+Response:
+application/json
+
+http://abc.com/shaklee/distributor?id=101

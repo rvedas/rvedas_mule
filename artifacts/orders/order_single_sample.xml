@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<order>
+    <orderId>101</orderId>
+    <orderDate>20170627</orderDate>
+    <distributorId>100</distributorId>
+    <distributorName>john smith</distributorName>
+    <orderVolume>10</orderVolume>
+    <orderPrice>76.5</orderPrice>
+    <orderCountry>USA</orderCountry>
+</order>

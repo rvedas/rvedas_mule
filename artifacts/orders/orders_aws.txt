@@ -1,0 +1,24 @@
+rvedas-mysql
+i-0a47e8dad89b653f0
+Elastic IP
+34.212.164.158
+Private IP:
+172.31.5.76
+Public DNS (IPv4)
+ec2-34-212-213-55.us-west-2.compute.amazonaws.com
+
+ssh -i "/Users/shiva/Desktop/rvedas/aws/keys/rvedas.pem" ubuntu@34.212.164.158
+
+root password is : egsonweb
+
+mysql root password : egsonweb
+
+systemctl status mysql.service
+systemctl start mysql
+systemctl stop mysql
+systemctl restart mysql
+
+SELECT * FROM mysql.user;
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'egsonweb';
+
+FLUSH PRIVILEGES;

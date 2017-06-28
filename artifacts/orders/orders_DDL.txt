@@ -1,0 +1,11 @@
+create database orders
+create table distributors
+    distributor id
+    distributor first name
+    distributor last name
+    distributor level
+    distributor street
+    distributor city
+    distributor state
+    distributor country
+insert records at least 10

@@ -1,0 +1,10 @@
+{"order": {
+    "orderId": 101,
+    "orderDate": 20170627,
+    "distributorId": 100,
+    "distributorName": "john smith",
+    "distributorLevel": 3,
+    "orderVolume": 10,
+    "orderPrice": 76.5,
+    "orderCountry": "USA"
+}}

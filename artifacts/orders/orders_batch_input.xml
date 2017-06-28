@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<orders>
+    <order>
+        <orderId>101</orderId>
+        <orderDate>20170627</orderDate>
+        <distributorId>100</distributorId>
+        <distributorName>john smith</distributorName>
+        <orderVolume>10</orderVolume>
+        <orderPrice>76.5</orderPrice>
+        <orderCountry>USA</orderCountry>
+    </order>
+    <order>
+        <orderId>102</orderId>
+        <orderDate>20170627</orderDate>
+        <distributorId>200</distributorId>
+        <distributorName>steve carrell</distributorName>
+        <orderVolume>20</orderVolume>
+        <orderPrice>83</orderPrice>
+        <orderCountry>USA</orderCountry>
+    </order>
+    <order>
+        <orderId>103</orderId>
+        <orderDate>20170627</orderDate>
+        <distributorId>300</distributorId>
+        <distributorName>will smith</distributorName>
+        <orderVolume>30</orderVolume>
+        <orderPrice>64.5</orderPrice>
+        <orderCountry>USA</orderCountry>
+    </order>
+    <order>
+        <orderId>104</orderId>
+        <orderDate>20170627</orderDate>
+        <distributorId>400</distributorId>
+        <distributorName>justin bieber</distributorName>
+        <orderVolume>40</orderVolume>
+        <orderPrice>66</orderPrice>
+        <orderCountry>USA</orderCountry>
+    </order>
+</orders>
