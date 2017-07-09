@@ -10,10 +10,10 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
 http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
     <flow name="distributorApiFlow">
-        <http:listener config-ref="" path="/" doc:name="HTTP"/>
-        <logger level="INFO" doc:name="Copy_of_Logger"/>
-        <variable-transformer doc:name="Copy_of_Variable"/>
-        <db:no-operation-selected config-ref="" doc:name="Copy_of_Database"/>
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/shaklee/distributor" allowedMethods="GET" doc:name="HTTP"/>
+        <logger level="INFO" doc:name="Logger"/>
+        <set-variable variableName="id" value="#[message.inboundProperties.'http.query.params'.id]" doc:name="Variable"/>
+        <db:no-operation-selected config-ref="" doc:name="Database"/>
         <dw:transform-message doc:name="Copy_of_Transform Message">
             <dw:set-payload><![CDATA[%dw 1.0
 %output application/java
