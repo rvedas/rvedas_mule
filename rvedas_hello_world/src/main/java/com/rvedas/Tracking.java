@@ -55,7 +55,7 @@ public class Tracking {
 			//test2<-index, id<-_index, name<-_type
 			
 			
-			String index_message;
+			//String index_message;
 			JSONObject index_json = new JSONObject();
 
 			JSONObject index_jsonObj = new JSONObject();
@@ -64,7 +64,7 @@ public class Tracking {
 			index_jsonObj.put("_type", "acad_locations");
 			index_json.put("index", index_jsonObj);
 
-			index_message = index_json.toString();
+			//index_message = index_json.toString();
 			//System.out.println(index_message);
 			
 			File file = new File(FILENAME);

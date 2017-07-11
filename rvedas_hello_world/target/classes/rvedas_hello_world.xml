@@ -6,24 +6,24 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
-	<spring:beans>
-		<spring:bean name="Tracking" class="com.rvedas.Tracking" />
-	</spring:beans>
-	<http:listener-config name="HTTP_Listener_Configuration"
-		host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration" />
+    <http:request-config name="Mock_Service_HTTP_Request_Configuration" host="192.168.1.25" port="9111" doc:name="HTTP Request Configuration"/>
+	
 	<flow name="rvedas_hello_worldFlow">
 		<http:listener config-ref="HTTP_Listener_Configuration"
-			path="/rvedas" allowedMethods="GET" doc:name="HTTP" />
+			path="/rvedas/hw" allowedMethods="GET" doc:name="HTTP" />
 
-		<invoke name="hello_world_entry" object-ref="Tracking" method="writeToRvedasLog"
+		<invoke name="track_hello_world_entry" object-ref="Tracking" method="writeToRvedasLog"
 			methodArguments="1001, hello_world, #[server.host], #[message.inboundProperties.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], hello_world_entry, 200, #[message.inboundProperties.client_id]" />
 		
-		<expression-component doc:name="Expression"><![CDATA[Thread.sleep(100);]]></expression-component>
+		<expression-component doc:name="xfm-25ms"><![CDATA[Thread.sleep(25);]]></expression-component>
 		
-		<invoke name="hello_world_exit" object-ref="Tracking" method="writeToRvedasLog"
+		<invoke name="track_hello_world_exit" object-ref="Tracking" method="writeToRvedasLog"
 			methodArguments="1001, hello_world, #[server.host], #[message.inboundProperties.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], hello_world_exit, 200, #[message.inboundProperties.client_id]" />
-
-		<set-payload value="{ &quot;message&quot; : &quot;hello world&quot; }"
-			doc:name="Set Payload" />
+        <http:request config-ref="Mock_Service_HTTP_Request_Configuration" path="/rvedas/mock1" method="GET" doc:name="invoke_mock_service">
+            <http:request-builder>
+                <http:header headerName="transaction_uuid" value="#[message.inboundProperties.transaction_uuid]"/>
+                <http:header headerName="client_id" value="#[message.inboundProperties.client_id]"/>
+            </http:request-builder>
+        </http:request>
 	</flow>
 </mule>

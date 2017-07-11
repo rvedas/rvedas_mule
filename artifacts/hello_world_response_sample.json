@@ -1,0 +1,12 @@
+{"hw_response": {
+    "header": {
+        "transaction_uuid": "value",
+        "client_id": "value",
+        "status.code": 200,
+        "status.message": "success"
+    },
+    "body": {
+        "account_number": "111",
+        "account_balance": 111
+    }
+}}
