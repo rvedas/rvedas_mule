@@ -11,5 +11,14 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 
 	<http:listener-config name="Mock1_HTTP_Listener_Configuration"
 		host="0.0.0.0" port="9111" doc:name="HTTP Listener Configuration" />
-		
+
+	<http:listener-config name="Mock2_HTTP_Listener_Configuration"
+		host="0.0.0.0" port="9112" doc:name="HTTP Listener Configuration" />
+
+	<http:listener-config name="Mock3_HTTP_Listener_Configuration"
+		host="0.0.0.0" port="9113" doc:name="HTTP Listener Configuration" />
+
+	<http:listener-config name="Mock4_HTTP_Listener_Configuration"
+		host="0.0.0.0" port="9114" doc:name="HTTP Listener Configuration" />
+
 </mule>

@@ -1,19 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.8.4"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
 
 
-	<http:listener-config name="Mock1_HTTP_Listener_Configuration"
+	<http:listener-config name="HTTP_Listener_Configuration_9101"
 		host="0.0.0.0" port="9101" doc:name="HTTP Listener Configuration" />
 
+	<http:request-config name="HTTP_Request_Configuration_9102"
+		host="192.168.1.25" port="9102" doc:name="HTTP Request Configuration" />
+		
+	<http:request-config name="HTTP_Request_Configuration_9103"
+		host="192.168.1.25" port="9103" doc:name="HTTP Request Configuration" />
 
 
+<http:listener-config name="HTTP_Listener_Configuration_9102"
+		host="0.0.0.0" port="9102" doc:name="HTTP Listener Configuration" />
+
+	<http:request-config name="HTTP_Request_Configuration_9121"
+		host="192.168.1.25" port="9121" doc:name="HTTP Request Configuration" />
+		
+	<http:request-config name="HTTP_Request_Configuration_9122"
+		host="192.168.1.25" port="9122" doc:name="HTTP Request Configuration" />
+
+
+<http:listener-config name="HTTP_Listener_Configuration_9103"
+		host="0.0.0.0" port="9103" doc:name="HTTP Listener Configuration" />
+
+	<http:request-config name="HTTP_Request_Configuration_9123"
+		host="192.168.1.25" port="9123" doc:name="HTTP Request Configuration" />
+		
+	<http:request-config name="HTTP_Request_Configuration_9124"
+		host="192.168.1.25" port="9124" doc:name="HTTP Request Configuration" />
 
 
 

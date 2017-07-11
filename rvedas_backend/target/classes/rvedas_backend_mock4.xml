@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+    <flow name="rvedas_mock4_Flow">
+        <http:listener config-ref="Mock4_HTTP_Listener_Configuration" path="/rvedas/mock4" doc:name="HTTP" allowedMethods="GET"/>
+        
+        <expression-component doc:name="xfm-100ms"><![CDATA[Thread.sleep(100);]]></expression-component>
+        <set-payload value="{&quot;hw_response&quot;: {     &quot;header&quot;: {         &quot;transaction_uuid&quot;: &quot;#[message.inboundProperties.transaction_uuid]&quot;,         &quot;client_id&quot;: #[message.inboundProperties.client_id],         &quot;status.code&quot;: 200,         &quot;status.message&quot;: &quot;success&quot;     },     &quot;body&quot;: {         &quot;account_number&quot;: &quot;12345&quot;,         &quot;account_balance&quot;: 116     } }}" doc:name="Set Payload"/>
+	    
+    </flow>
+</mule>

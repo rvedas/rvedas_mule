@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+    
+    <flow name="rvedas_lb_dc2_Flow">
+        <http:listener config-ref="HTTP_Listener_Configuration_9103" path="/rvedas/lb/dc2/hw" allowedMethods="GET" doc:name="HTTP"/>
+        <round-robin doc:name="Round Robin">
+            <http:request config-ref="HTTP_Request_Configuration_9123" path="/rvedas/hw" method="GET" doc:name="HTTP">
+                <http:request-builder>
+                    <http:header headerName="transaction_uuid" value="#[message.inboundProperties.transaction_uuid]"/>
+                    <http:header headerName="client_id" value="#[message.inboundProperties.client_id]"/>
+                </http:request-builder>
+            </http:request>
+            <http:request config-ref="HTTP_Request_Configuration_9124" path="/rvedas/hw" method="GET" doc:name="HTTP">
+                <http:request-builder>
+                    <http:header headerName="transaction_uuid" value="#[message.inboundProperties.transaction_uuid]"/>
+                    <http:header headerName="client_id" value="#[message.inboundProperties.client_id]"/>
+                </http:request-builder>
+            </http:request>
+        </round-robin>
+    </flow>
+</mule>
