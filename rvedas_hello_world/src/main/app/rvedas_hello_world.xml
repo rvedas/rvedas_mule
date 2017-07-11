@@ -10,17 +10,21 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 	<flow name="rvedas_hello_worldFlow">
 		<http:listener config-ref="HTTP_Listener_Configuration"
 			path="/rvedas/hw" allowedMethods="GET" doc:name="HTTP" />
+        <message-properties-transformer scope="session" doc:name="Message Properties">
+            <add-message-property key="transaction_uuid" value="#[message.inboundProperties.transaction_uuid]"/>
+            <add-message-property key="client_id" value="#[message.inboundProperties.client_id]"/>
+        </message-properties-transformer>
 
 		<invoke name="track_hello_world_entry" object-ref="Tracking"
 			method="writeToRvedasLog"
-			methodArguments="1001, hello_world, #[server.host], #[message.inboundProperties.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], hello_world_entry, 200, #[message.inboundProperties.client_id]" />
+			methodArguments="1001, hello_world, #[server.host], ${transaction_uuid}, #[server.dateTime.withTimeZone('UTC')], hello_world_entry, 200, ${client_id}" />
 
 		<expression-component doc:name="xfm-25ms"><![CDATA[Thread.sleep(25);]]></expression-component>
 
 		
 		<invoke name="track_backend1_request" object-ref="Tracking"
 			method="writeToRvedasLog"
-			methodArguments="1001, hello_world, #[server.host], #[message.inboundProperties.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], backend1_request, 200, #[message.inboundProperties.client_id]" />
+			methodArguments="1001, hello_world, #[server.host], ${transaction_uuid}, #[server.dateTime.withTimeZone('UTC')], backend1_request, 200, ${client_id}" />
 		
 		
 		
@@ -29,9 +33,9 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 			path="/rvedas/mock1" method="GET" doc:name="invoke_mock_service1">
 			<http:request-builder>
 				<http:header headerName="transaction_uuid"
-					value="#[message.inboundProperties.transaction_uuid]" />
+					value="${transaction_uuid}" />
 				<http:header headerName="client_id"
-					value="#[message.inboundProperties.client_id]" />
+					value="${client_id}" />
 			</http:request-builder>
 		</http:request>
 		
@@ -39,7 +43,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 		
 		<invoke name="track_backend1_response" object-ref="Tracking"
 			method="writeToRvedasLog"
-			methodArguments="1001, hello_world, #[server.host], #[message.inboundProperties.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], backend1_response, 200, #[message.inboundProperties.client_id]" />
+			methodArguments="1001, hello_world, #[server.host], ${transaction_uuid}, #[server.dateTime.withTimeZone('UTC')], backend1_response, 200, ${client_id}" />
 		
 		
 		<expression-component doc:name="xfm-25ms"><![CDATA[Thread.sleep(25);]]></expression-component>
@@ -47,7 +51,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 		
 		<invoke name="track_backend2_request" object-ref="Tracking"
 			method="writeToRvedasLog"
-			methodArguments="1001, hello_world, #[server.host], #[message.inboundProperties.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], backend2_request, 200, #[message.inboundProperties.client_id]" />
+			methodArguments="1001, hello_world, #[server.host], ${transaction_uuid}, #[server.dateTime.withTimeZone('UTC')], backend2_request, 200, ${client_id}" />
 		
 		
 		
@@ -55,9 +59,9 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 			path="/rvedas/mock2" method="GET" doc:name="invoke_mock_service2">
 			<http:request-builder>
 				<http:header headerName="transaction_uuid"
-					value="#[message.inboundProperties.transaction_uuid]" />
+					value="${transaction_uuid}" />
 				<http:header headerName="client_id"
-					value="#[message.inboundProperties.client_id]" />
+					value="${client_id}" />
 			</http:request-builder>
 		</http:request>
 		
@@ -65,7 +69,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 		
 		<invoke name="track_backend2_response" object-ref="Tracking"
 			method="writeToRvedasLog"
-			methodArguments="1001, hello_world, #[server.host], #[message.inboundProperties.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], backend2_response, 200, #[message.inboundProperties.client_id]" />
+			methodArguments="1001, hello_world, #[server.host], ${transaction_uuid}, #[server.dateTime.withTimeZone('UTC')], backend2_response, 200, ${client_id}" />
 		
 		
 		<expression-component doc:name="xfm-25ms"><![CDATA[Thread.sleep(25);]]></expression-component>
@@ -75,7 +79,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 		
 		<invoke name="track_hello_world_exit" object-ref="Tracking"
 			method="writeToRvedasLog"
-			methodArguments="1001, hello_world, #[server.host], #[message.inboundProperties.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], hello_world_exit, 200, #[message.inboundProperties.client_id]" />
+			methodArguments="1001, hello_world, #[server.host], ${transaction_uuid}, #[server.dateTime.withTimeZone('UTC')], hello_world_exit, 200, ${client_id}" />
 		
 		
 	</flow>
