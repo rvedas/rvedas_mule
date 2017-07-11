@@ -56,12 +56,10 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 		
 		
 		<http:request config-ref="Mock2_Service_HTTP_Request_Configuration"
-			path="/rvedas/mock2" method="GET" doc:name="invoke_mock_service2">
+			path="/rvedas/mock3" method="GET" doc:name="invoke_mock_service2">
 			<http:request-builder>
-				<http:header headerName="transaction_uuid"
-					value="#[sessionVars.transaction_uuid]" />
-				<http:header headerName="client_id"
-					value="#[sessionVars.client_id]" />
+                <http:header headerName="transaction_uuid" value="#[sessionVars.transaction_uuid]"/>
+                <http:header headerName="client_id" value="#[sessionVars.client_id]"/>
 			</http:request-builder>
 		</http:request>
 		
