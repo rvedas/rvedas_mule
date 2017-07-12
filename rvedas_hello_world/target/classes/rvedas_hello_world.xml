@@ -14,17 +14,14 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
             <add-message-property key="transaction_uuid" value="#[message.inboundProperties.transaction_uuid]"/>
             <add-message-property key="client_id" value="#[message.inboundProperties.client_id]"/>
         </message-properties-transformer>
-
-		<invoke name="track_hello_world_entry" object-ref="Tracking"
-			method="writeToRvedasLog"
-			methodArguments="1001, hello_world, #[server.host], #[sessionVars.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], hello_world_entry, 200, #[sessionVars.client_id]" />
+        <async doc:name="Async">
+            <invoke name="track_hello_world_entry" object-ref="Tracking" method="writeToRvedasLog" methodArguments="1001, hello_world, #[server.host], #[sessionVars.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], hello_world_entry, 200, #[sessionVars.client_id]"/>
+        </async>
 
 		<expression-component doc:name="xfm-25ms"><![CDATA[Thread.sleep(25);]]></expression-component>
-
-		
-		<invoke name="track_backend1_request" object-ref="Tracking"
-			method="writeToRvedasLog"
-			methodArguments="1001, hello_world, #[server.host], #[sessionVars.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], backend1_request, 200, #[sessionVars.client_id]" />
+        <async doc:name="Async">
+            <invoke name="track_backend1_request" object-ref="Tracking" method="writeToRvedasLog" methodArguments="1001, hello_world, #[server.host], #[sessionVars.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], backend1_request, 200, #[sessionVars.client_id]"/>
+        </async>
 		
 		
 		
@@ -38,20 +35,15 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 					value="#[sessionVars.client_id]" />
 			</http:request-builder>
 		</http:request>
-		
-		
-		
-		<invoke name="track_backend1_response" object-ref="Tracking"
-			method="writeToRvedasLog"
-			methodArguments="1001, hello_world, #[server.host], #[sessionVars.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], backend1_response, 200, #[sessionVars.client_id]" />
+        <async doc:name="Async">
+            <invoke name="track_backend1_response" object-ref="Tracking" method="writeToRvedasLog" methodArguments="1001, hello_world, #[server.host], #[sessionVars.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], backend1_response, 200, #[sessionVars.client_id]"/>
+        </async>
 		
 		
 		<expression-component doc:name="xfm-25ms"><![CDATA[Thread.sleep(25);]]></expression-component>
-		
-		
-		<invoke name="track_backend2_request" object-ref="Tracking"
-			method="writeToRvedasLog"
-			methodArguments="1001, hello_world, #[server.host], #[sessionVars.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], backend2_request, 200, #[sessionVars.client_id]" />
+        <async doc:name="Async">
+            <invoke name="track_backend2_request" object-ref="Tracking" method="writeToRvedasLog" methodArguments="1001, hello_world, #[server.host], #[sessionVars.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], backend2_request, 200, #[sessionVars.client_id]"/>
+        </async>
 		
 		
 		
@@ -62,22 +54,13 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
                 <http:header headerName="client_id" value="#[sessionVars.client_id]"/>
 			</http:request-builder>
 		</http:request>
-		
-		
-		
-		<invoke name="track_backend2_response" object-ref="Tracking"
-			method="writeToRvedasLog"
-			methodArguments="1001, hello_world, #[server.host], #[sessionVars.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], backend2_response, 200, #[sessionVars.client_id]" />
-		
-		
-		<expression-component doc:name="xfm-25ms"><![CDATA[Thread.sleep(25);]]></expression-component>
-		
-		
-		
-		
-		<invoke name="track_hello_world_exit" object-ref="Tracking"
-			method="writeToRvedasLog"
-			methodArguments="1001, hello_world, #[server.host], #[sessionVars.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], hello_world_exit, 200, #[sessionVars.client_id]" />
+        <async doc:name="Async">
+            <invoke name="track_backend2_response" object-ref="Tracking" method="writeToRvedasLog" methodArguments="1001, hello_world, #[server.host], #[sessionVars.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], backend2_response, 200, #[sessionVars.client_id]"/>
+        </async>
+        <expression-component doc:name="xfm-25ms"><![CDATA[Thread.sleep(25);]]></expression-component>
+        <async doc:name="Async">
+            <invoke name="track_hello_world_exit" object-ref="Tracking" method="writeToRvedasLog" methodArguments="1001, hello_world, #[server.host], #[sessionVars.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], hello_world_exit, 200, #[sessionVars.client_id]"/>
+        </async>
 		
 		
 	</flow>
