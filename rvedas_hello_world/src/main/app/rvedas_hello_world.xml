@@ -40,7 +40,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
         </async>
 		
 		
-		<expression-component doc:name="xfm-25ms"><![CDATA[Thread.sleep(10000);]]></expression-component>
+		<expression-component doc:name="xfm-25ms"><![CDATA[Thread.sleep(25);]]></expression-component>
         <async doc:name="Async">
             <invoke name="track_backend2_request" object-ref="Tracking" method="writeToRvedasLog" methodArguments="1001, hello_world, #[server.host], #[sessionVars.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], backend2_request, 200, #[sessionVars.client_id]"/>
         </async>
