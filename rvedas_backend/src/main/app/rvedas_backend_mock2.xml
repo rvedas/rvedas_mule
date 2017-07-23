@@ -10,21 +10,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
         <http:listener config-ref="Mock2_HTTP_Listener_Configuration" path="/rvedas/mock2" doc:name="HTTP" allowedMethods="GET"/>
         
         <expression-component doc:name="xfm-100ms"><![CDATA[Thread.sleep(100);]]></expression-component>
-        <set-payload value="{
-  &quot;hello_world_response&quot;: {
-    &quot;header&quot;: {
-      &quot;transaction_uuid&quot;:  &quot;#[message.inboundProperties.transaction_uuid]&quot;,
-      &quot;client_id&quot;:  #[message.inboundProperties.client_id],
-      &quot;status.code&quot;: 200,
-      &quot;status.message&quot;: &quot;success&quot;
-    },
-    &quot;body&quot;: {
-      &quot;account_number&quot;: #[message.inboundProperties.account_num],
-      &quot;account_balance&quot;: 2500,
-      &quot;credit_score&quot;: 650
-    }
-  }
-}" doc:name="Set Payload"/>
+        <set-payload value="{   &quot;hello_world_response&quot;: {     &quot;header&quot;: {       &quot;transaction_uuid&quot;:  &quot;#[message.inboundProperties.transaction_uuid]&quot;,       &quot;client_id&quot;:  #[message.inboundProperties.client_id],       &quot;status.code&quot;: 200,       &quot;status.message&quot;: &quot;success&quot;     },     &quot;body&quot;: {       &quot;account_number&quot;: &quot;#[message.inboundProperties.account_number]&quot;,       &quot;account_balance&quot;: 2500,       &quot;credit_score&quot;: 650     }   } }" doc:name="Set Payload"/>
 	    
     </flow>
 </mule>

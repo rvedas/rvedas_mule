@@ -13,7 +13,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
         <message-properties-transformer scope="session" doc:name="Message Properties">
             <add-message-property key="transaction_uuid" value="#[message.inboundProperties.transaction_uuid]"/>
             <add-message-property key="client_id" value="#[message.inboundProperties.client_id]"/>
-            <add-message-property key="account_num" value="#[message.inboundProperties.account_num]"/>
+            <add-message-property key="account_number" value="#[message.inboundProperties.account_number]"/>
         </message-properties-transformer>
         <async doc:name="Async">
             <invoke name="track_hello_world_entry" object-ref="Tracking" method="writeToRvedasLog" methodArguments="1001, hello_world, #[server.host], #[sessionVars.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], hello_world_entry, 200, #[sessionVars.client_id]"/>
@@ -32,7 +32,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 			<http:request-builder>
                 <http:header headerName="transaction_uuid" value="#[sessionVars.transaction_uuid]"/>
                 <http:header headerName="client_id" value="#[sessionVars.client_id]"/>
-                <http:header headerName="account_num" value="#[sessionVars.account_num]"/>
+                <http:header headerName="account_number" value="#[sessionVars.account_number]"/>
 			</http:request-builder>
 		</http:request>
         <async doc:name="Async">
@@ -52,7 +52,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 			<http:request-builder>
                 <http:header headerName="transaction_uuid" value="#[sessionVars.transaction_uuid]"/>
                 <http:header headerName="client_id" value="#[sessionVars.client_id]"/>
-                <http:header headerName="account_num" value="#[sessionVars.account_num]"/>
+                <http:header headerName="account_number" value="#[sessionVars.account_number]"/>
 			</http:request-builder>
 		</http:request>
         <async doc:name="Async">
