@@ -14,12 +14,14 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
                 <http:request-builder>
                     <http:header headerName="transaction_uuid" value="#[message.inboundProperties.transaction_uuid]"/>
                     <http:header headerName="client_id" value="#[message.inboundProperties.client_id]"/>
+                    <http:header headerName="account_number" value="#[message.inboundProperties.account_number]"/>
                 </http:request-builder>
             </http:request>
             <http:request config-ref="HTTP_Request_Configuration_9103" path="/rvedas/lb/dc2/hw" method="GET" doc:name="HTTP">
                 <http:request-builder>
                     <http:header headerName="transaction_uuid" value="#[message.inboundProperties.transaction_uuid]"/>
                     <http:header headerName="client_id" value="#[message.inboundProperties.client_id]"/>
+                    <http:header headerName="account_number" value="#[message.inboundProperties.account_number]"/>
                 </http:request-builder>
             </http:request>
         </round-robin>
