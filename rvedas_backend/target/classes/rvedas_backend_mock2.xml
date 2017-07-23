@@ -13,7 +13,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
         <set-payload value="{
   &quot;hello_world_response&quot;: {
     &quot;header&quot;: {
-      &quot;transaction_uuid&quot;:  #[message.inboundProperties.transaction_uuid],
+      &quot;transaction_uuid&quot;:  &quot;#[message.inboundProperties.transaction_uuid]&quot;,
       &quot;client_id&quot;:  #[message.inboundProperties.client_id],
       &quot;status.code&quot;: 200,
       &quot;status.message&quot;: &quot;success&quot;
