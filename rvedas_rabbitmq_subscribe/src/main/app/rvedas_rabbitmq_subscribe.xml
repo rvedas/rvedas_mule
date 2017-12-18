@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:amqp="http://www.mulesoft.org/schema/mule/amqp" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/amqp http://www.mulesoft.org/schema/mule/amqp/current/mule-amqp.xsd">
+    <amqp:connector name="AMQP_0_9_Connector" validateConnections="true" doc:name="AMQP-0-9 Connector"/>
+    <amqp:endpoint exchangeName="sivajiexchange" queueName="sivajiqueue" exchangeType="topic" exchangeDurable="true" name="AMQP_0_9" responseTimeout="10000" doc:name="AMQP-0-9"/>
+    <flow name="rvedas_rabbitmq_subscribeFlow">
+        <amqp:inbound-endpoint exchangeName="sivajiexchange" queueName="sivajiqueue" exchangeType="topic" exchangeDurable="true" responseTimeout="10000" connector-ref="AMQP_0_9_Connector" ref="AMQP_0_9" doc:name="AMQP-0-9"/>
+        <logger message="message received from Rabbit : #[message.payloadAs(String)]" level="INFO" doc:name="Logger"/>
+    </flow>
+</mule>

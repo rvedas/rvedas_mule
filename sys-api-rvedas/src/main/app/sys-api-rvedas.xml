@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
+
+	<flow name="sys-api-rvedasFlow">
+
+		<http:listener config-ref="HTTP_Listener_Configuration"
+			path="${sys.http.basepath}" doc:name="HTTP" />
+
+		<set-session-variable variableName="uuid"
+			value="#[java.util.UUID.randomUUID().toString()]" doc:name="set uuid" />
+
+		<set-session-variable variableName="startTime"
+			value="#[server.dateTime]" doc:name="set start time" />
+
+
+		<async doc:name="log start">
+			<dw:transform-message doc:name="build log message">
+				<dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+  "apiname": "sys-api-rvedas",
+  "uuid": sessionVars.uuid,
+  "message": "task started successfully",
+  "status": 200,
+  "timestamp": sessionVars.startTime,
+  "stepIdentifier": "SYS_RVEDAS_START",
+  "additionalKeys": {
+    "key1": "value1",
+    "key2": "value2"
+  }
+}]]></dw:set-payload>
+			</dw:transform-message>
+            <logger message="#[payload]" level="INFO" doc:name="Logger"/>
+            <http:request config-ref="HTTP_Request_Configuration" path="${elk.http.basepath}" method="POST" doc:name="HTTP">
+                <http:request-builder>
+                    <http:header headerName="Content-Type" value="application/json"/>
+                </http:request-builder>
+            </http:request>
+            <logger message="#[message.inboundProperties.'http.status']" level="INFO" doc:name="Logger"/>
+		</async>
+
+		<expression-component doc:name="Expression"><![CDATA[Thread.sleep(1000);]]></expression-component>
+		
+		<set-session-variable variableName="endTime"
+			value="#[server.dateTime]" doc:name="set end time" />
+		
+		<async doc:name="log end">
+			<dw:transform-message doc:name="build log message">
+				<dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+  "apiname": "sys-api-rvedas",
+  "uuid": sessionVars.uuid,
+  "message": "task completed successfully",
+  "status": 200,
+  "timestamp": sessionVars.endTime,
+  "stepIdentifier": "SYS_RVEDAS_END",
+  "additionalKeys": {
+    "key1": "value1",
+    "key2": "value2"
+  }
+}]]></dw:set-payload>
+			</dw:transform-message>
+            <http:request config-ref="HTTP_Request_Configuration" path="${elk.http.basepath}" method="POST" doc:name="HTTP">
+                <http:request-builder>
+                    <http:header headerName="Content-Type" value="application/json"/>
+                </http:request-builder>
+            </http:request>
+		</async>
+		
+		
+		<set-payload
+			value="{
+&quot;message&quot; : &quot;success&quot;,
+&quot;whereIcameFrom&quot; : &quot;sys-api-rvedas&quot;
+}"
+			doc:name="Set Payload" />
+	</flow>
+
+</mule>
