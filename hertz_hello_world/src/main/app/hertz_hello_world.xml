@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="hertz_hello_worldFlow">
+		<http:listener config-ref="HTTP_Listener_Configuration"
+			path="/hertz" doc:name="HTTP" />
+
+		<message-properties-transformer scope="session"
+			doc:name="Message Properties">
+			<add-message-property key="transaction_uuid"
+				value="#[message.inboundProperties.transaction_uuid]" />
+			<add-message-property key="client_id"
+				value="#[message.inboundProperties.client_id]" />
+		</message-properties-transformer>
+
+		<async doc:name="Async">
+			<invoke name="track_hello_world_entry" object-ref="Tracking"
+				method="writeToRvedasLog"
+				methodArguments="1001, hello_world, #[server.host], #[sessionVars.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], hello_world_entry, 200, #[sessionVars.client_id]" />
+		</async>
+
+		<expression-component doc:name="xfm-25ms"><![CDATA[Thread.sleep(25);]]></expression-component>
+
+
+		<logger message="Hertz - Hello World - Success !!!" level="INFO"
+			doc:name="Logger" />
+
+
+		<async doc:name="Async">
+			<invoke name="track_hello_world_exit" object-ref="Tracking"
+				method="writeToRvedasLog"
+				methodArguments="1001, hello_world, #[server.host], #[sessionVars.transaction_uuid], #[server.dateTime.withTimeZone('UTC')], hello_world_exit, 200, #[sessionVars.client_id]" />
+		</async>
+
+
+		<set-payload value="Success!!!" doc:name="Set Payload" />
+	</flow>
+</mule>

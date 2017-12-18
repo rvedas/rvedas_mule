@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw"
+	xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
+
+
+	<!-- Read http request by using http connector -->
+	<!-- Add metadata to input connector so data sense can leverage the metadata -->
+	<!-- Log the payload as is - mule object payload -->
+	<!-- Log the payload as string - convert mule object payload to string -->
+	<!-- create a global MEL function to base64 decode - The function will take 
+		a base64 encoded string, decode the value and returns a string -->
+	<!-- Add Transform Message -->
+	<!-- Transform Message should map input xml fields to output json fields -->
+	<!-- Field names will be UPPER CASE -->
+	<!-- Field Values will be UPPER CASE -->
+	<!-- Password field will be decoded string, no case conversion with password -->
+	<!-- Return the response -->
+
+	<http:listener-config name="HTTP_Listener_Configuration"
+		host="localhost" port="8081" doc:name="HTTP Listener Configuration" />
+	<configuration doc:name="Configuration">
+		<expression-language>
+			<global-functions>
+				def base64decode(value) {
+				byte[] byte_after_decode = java.util.Base64.getDecoder().decode(value);
+				String string_after_decode = new String(byte_after_decode, "UTF-8");
+				return string_after_decode;
+				}
+
+			</global-functions>
+
+		</expression-language>
+
+	</configuration>
+
+	<flow name="base64">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="xml2json" doc:name="HTTP" metadata:id="96acffb2-c6f3-4d98-b039-ce14c52a6b95"/>
+			
+			<logger message="ORIGINAL ENCODED PASSWORD : #[dw(&quot;payload.user.password&quot;)]" doc:name="Logger"
+			level="INFO" />
+			
+			<logger message="DECODED PASSWORD : #[dw(&quot;base64decode(payload.user.password)&quot;)]" doc:name="Logger"
+			level="INFO" />
+        <logger message="DECODE FROM MEL: #[base64decode(payload.user.password)]" level="INFO" doc:name="Logger"/>
+			
+		<dw:transform-message doc:name="Transform Message"
+			metadata:id="066b511d-fdf9-4385-8594-a6ffbdf256f9">
+			<dw:input-payload
+				doc:sample="/Users/shiva/Desktop/Hertz/base64_mule/resources/input.xml" />
+			<dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+	USER: {
+		FIRSTNAME: upper payload.user.firstName,
+		LASTNAME: upper payload.user.lastName,
+		PASSWORD: base64decode(payload.user.password)
+	}
+}]]></dw:set-payload>
+		</dw:transform-message>
+		
+		
+		<set-payload value="#[payload]" doc:name="Set Payload" />
+
+	</flow>
+
+
+
+
+
+</mule>
