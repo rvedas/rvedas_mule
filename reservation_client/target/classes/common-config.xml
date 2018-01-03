@@ -11,7 +11,7 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 
 	<!-- <context:property-placeholder location="reservations-client-dev.properties" />  -->
 	
-	<context:property-placeholder location="reservations-client-dev.properties" />
+	<context:property-placeholder location="reservations-client-${env}.properties" />
 	
 
 	<http:request-config name="HTTP_Request_Configuration_elk"
@@ -19,8 +19,9 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 
 	<http:listener-config name="HTTP_Listener_Configuration"
 		host="${res.http.host}" port="${res.http.port}" doc:name="HTTP Listener Configuration" />
-
-	
+    <spring:beans>
+        <spring:bean id="objectStore" class="org.mule.util.store.SimpleMemoryObjectStore"/>
+    </spring:beans>
 
 
 </mule>

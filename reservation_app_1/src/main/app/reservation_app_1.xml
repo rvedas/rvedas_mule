@@ -16,6 +16,64 @@ http://www.mulesoft.org/schema/mule/amqp http://www.mulesoft.org/schema/mule/amq
     <amqp:endpoint exchangeName="${app_1_input_exchange}" queueName="${app_1_input_queue}" exchangeType="topic" exchangeDurable="true" name="AMQP_0_9_ip" responseTimeout="10000" doc:name="AMQP-0-9"/>
     <amqp:connector name="AMQP_0_9_Connector_op" validateConnections="true" host="${rabbitmq.host}" doc:name="AMQP-0-9 Connector"/>
     <amqp:endpoint exchangeName="${app_2_input_exchange}" queueName="${app_2_input_queue}" exchangeType="topic" exchangeDurable="true" name="AMQP_0_9_op" responseTimeout="10000" doc:name="AMQP-0-9"/>
+    <sub-flow name="log_end">
+        <dw:transform-message doc:name="build log message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+  "apiname": "reservation_app_1",
+  "uuid": flowVars.uuid,
+  "message": "application 1 sending message to app_2_input_q",
+  "status": 200,
+  "timestamp": flowVars.endTime,
+  "hostName": flowVars.hostName,
+  "stepIdentifier": "RESERVATION_APP_1_END",
+  "additionalKeys": {
+    "key1": "value1",
+    "key2": "value2"
+  }
+}]]></dw:set-payload>
+        </dw:transform-message>
+        <logger message="#[payload]" level="INFO" doc:name="Logger"/>
+        <until-successful objectStore-ref="objectStore" maxRetries="5" doc:name="Until Successful">
+            <http:request config-ref="HTTP_Request_Configuration_elk" path="${elk.http.basepath}" method="POST" doc:name="HTTP">
+                <http:request-builder>
+                    <http:header headerName="Content-Type" value="application/json"/>
+                </http:request-builder>
+            </http:request>
+        </until-successful>
+        <logger message="#[message.inboundProperties.'http.status']" level="INFO" doc:name="Logger"/>
+    </sub-flow>
+    <sub-flow name="log_start">
+        <dw:transform-message doc:name="build log message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/json
+---
+{
+  "apiname": "reservation_app_1",
+  "uuid": flowVars.uuid,
+  "message": "application 1 reading message from app_1_input_q",
+  "status": 200,
+  "timestamp": flowVars.startTime,
+  "hostName": flowVars.hostName,
+  "stepIdentifier": "RESERVATION_APP_1_START",
+  "additionalKeys": {
+    "key1": "value1",
+    "key2": "value2"
+  }
+}]]></dw:set-payload>
+        </dw:transform-message>
+        <logger message="#[payload]" level="INFO" doc:name="Logger"/>
+        <until-successful objectStore-ref="objectStore" maxRetries="5" doc:name="Until Successful">
+            <http:request config-ref="HTTP_Request_Configuration_elk" path="${elk.http.basepath}" method="POST" doc:name="HTTP">
+                <http:request-builder>
+                    <http:header headerName="Content-Type" value="application/json"/>
+                </http:request-builder>
+            </http:request>
+        </until-successful>
+        <logger message="#[message.inboundProperties.'http.status']" level="INFO" doc:name="Logger"/>
+    </sub-flow>
     <flow name="reservation_app_1Flow">
         
         <amqp:inbound-endpoint exchangeName="${app_1_input_exchange}" queueName="${app_1_input_queue}" exchangeType="topic" exchangeDurable="true" responseTimeout="10000"  connector-ref="AMQP_0_9_Connector_ip" ref="AMQP_0_9_ip" doc:name="app_1_input_q"/>
@@ -38,33 +96,7 @@ http://www.mulesoft.org/schema/mule/amqp http://www.mulesoft.org/schema/mule/amq
         
 
 		<async doc:name="log start">
-			<dw:transform-message doc:name="build log message">
-				<dw:set-payload><![CDATA[%dw 1.0
-%output application/json
----
-{
-  "apiname": "reservation_app_1",
-  "uuid": flowVars.uuid,
-  "message": "application 1 reading message from app_1_input_q",
-  "status": 200,
-  "timestamp": flowVars.startTime,
-  "hostName": flowVars.hostName,
-  "stepIdentifier": "RESERVATION_APP_1_START",
-  "additionalKeys": {
-    "key1": "value1",
-    "key2": "value2"
-  }
-}]]></dw:set-payload>
-			</dw:transform-message>
-			<logger message="#[payload]" level="INFO" doc:name="Logger" />
-			<http:request config-ref="HTTP_Request_Configuration_elk"
-				path="${elk.http.basepath}" method="POST" doc:name="HTTP">
-				<http:request-builder>
-					<http:header headerName="Content-Type" value="application/json" />
-				</http:request-builder>
-			</http:request>
-			<logger message="#[message.inboundProperties.'http.status']"
-				level="INFO" doc:name="Logger" />
+            <flow-ref name="log_start" doc:name="Flow Reference"/>
 		</async>
         
         
@@ -75,33 +107,7 @@ http://www.mulesoft.org/schema/mule/amqp http://www.mulesoft.org/schema/mule/amq
         
 
 		<async doc:name="log end">
-			<dw:transform-message doc:name="build log message">
-				<dw:set-payload><![CDATA[%dw 1.0
-%output application/json
----
-{
-  "apiname": "reservation_app_1",
-  "uuid": flowVars.uuid,
-  "message": "application 1 sending message to app_2_input_q",
-  "status": 200,
-  "timestamp": flowVars.endTime,
-  "hostName": flowVars.hostName,
-  "stepIdentifier": "RESERVATION_APP_1_END",
-  "additionalKeys": {
-    "key1": "value1",
-    "key2": "value2"
-  }
-}]]></dw:set-payload>
-			</dw:transform-message>
-			<logger message="#[payload]" level="INFO" doc:name="Logger" />
-			<http:request config-ref="HTTP_Request_Configuration_elk"
-				path="${elk.http.basepath}" method="POST" doc:name="HTTP">
-				<http:request-builder>
-					<http:header headerName="Content-Type" value="application/json" />
-				</http:request-builder>
-			</http:request>
-			<logger message="#[message.inboundProperties.'http.status']"
-				level="INFO" doc:name="Logger" />
+            <flow-ref name="log_end" doc:name="Flow Reference"/>
 		</async>
         
         <expression-component doc:name="Expression"><![CDATA[Thread.sleep(50);]]></expression-component>
